@@ -13,3 +13,5 @@
 </p>
 
 Exploring methods for recognizing touch gestures
+
+[![Screen shot](screenshot.png)](https://csci-4849-gestures.grantburry.com)
