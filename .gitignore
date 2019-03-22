@@ -1,0 +1,31 @@
+# Compiled Output
+/build
+
+# Testing
+/coverage
+
+# Dependencies
+node_modules
+.npm
+/.pnp
+.pnp.js
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Editor Workspace Config
+.vscode
+
+# Misc
+.DS_Store
+.temp
