@@ -1,28 +1,32 @@
+// Import jQuery
 import $ from 'jquery';
+
+// Import stylesheets
 import 'systematize';
 import './style.scss';
 
 // Variables
-const gestureArea = $('#gestureArea');
 const mousePosition = {};
 let clicks = 0;
 
 // Result functions
 const setResult = result => $('#gestureResult').text(result);
-const setMouseResult = result => setResult(`Mouse ${result}`);
 const setSwipeResult = result => setResult(`Swipe ${result}`);
 
-// Function that returns a function which sets the mouse position
+// Function that returns a function which sets the pointer position
 // from the event object and handles a callback to set the result
-const setMousePosition = (direction, next) => ({ pageX, pageY }) => {
-    const resolve = () => setMouseResult(direction);
+const setPointerPosition = (direction, next) => event => {
+    const { changedTouches } = event;
+    const resolve = () =>
+        setResult(`${changedTouches ? 'Touch' : 'Mouse'} ${direction}`);
+    const { pageX, pageY } = changedTouches ? changedTouches[0] : event;
     mousePosition[direction] = { x: pageX, y: pageY };
     return typeof next === 'function' ? next(resolve) : resolve();
 };
 
-// Functions for handling mouse up/down events
-const mouseDown = setMousePosition('down');
-const mouseUp = setMousePosition('up', resolve => {
+// Functions for handling pointer up/down events
+const pointerDown = setPointerPosition('down');
+const pointerUp = setPointerPosition('up', resolve => {
     const { down, up } = mousePosition;
     if (up.x < down.x) setSwipeResult('left ←');
     else if (up.x > down.x) setSwipeResult('right →');
@@ -56,8 +60,10 @@ const click = () => {
 const dblClick = () => setResult('Double click');
 
 // Attach event handlers to gesture area
-gestureArea
-    .mousedown(mouseDown)
-    .mouseup(mouseUp)
+$('#gestureArea')
+    .mousedown(pointerDown)
+    .mouseup(pointerUp)
+    .bind('touchstart', pointerDown)
+    .bind('touchend', pointerUp)
     .click(click)
     .dblclick(dblClick);
